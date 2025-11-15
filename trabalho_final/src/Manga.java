@@ -7,7 +7,7 @@ public class Manga extends Obras {
 	}
 
 	public String getDistribuidora() {
-		return null;
+		return distribuidora;
 	}
 
 }

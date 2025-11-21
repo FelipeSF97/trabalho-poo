@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Obras {
+public abstract class Obra {
 	private String titulo;
 	private String autor;
 	private int numCapitulos;
@@ -9,7 +9,7 @@ public abstract class Obras {
 	private double avaliacao;
 	private List<Genero> generos = new ArrayList<>();
 
-	public Obras(String titulo, String autor, int capitulos, String sinopse, double avaliacao) {
+	public Obra(String titulo, String autor, int capitulos, String sinopse, double avaliacao) {
 		this.titulo = titulo;
 		this.autor = autor;
 		this.numCapitulos = capitulos;
@@ -44,6 +44,10 @@ public abstract class Obras {
 	public void adicionarGenero(Genero genero) {
 		if (genero != null)
 			generos.add(genero);
+	}
+
+	public void avaliarObra(){
+
 	}
 
 	public abstract String getTipo();

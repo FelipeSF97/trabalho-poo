@@ -1,4 +1,4 @@
-public class Manhwa extends Obras {
+public class Manhwa extends Obra {
 	private String plataforma;
 
 	public Manhwa(String titulo, String autor, int capitulos, String sinopse, double avaliacao, String plataforma) {

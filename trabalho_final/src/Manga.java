@@ -1,4 +1,4 @@
-public class Manga extends Obras {
+public class Manga extends Obra {
 	private String distribuidora;
 
 	public Manga(String titulo, String autor, int capitulos, String sinopse, double avaliacao, String distribuidora) {

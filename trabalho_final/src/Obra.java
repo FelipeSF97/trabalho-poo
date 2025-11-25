@@ -46,8 +46,8 @@ public abstract class Obra {
 			generos.add(genero);
 	}
 
-	public void avaliarObra(){
-
+	public void avaliarObra(double nota) {
+		this.avaliacao = nota;
 	}
 
 	public abstract String getTipo();

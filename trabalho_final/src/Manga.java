@@ -1,8 +1,8 @@
 public class Manga extends Obra {
 	private String distribuidora;
 
-	public Manga(String titulo, String autor, int capitulos, String sinopse, double avaliacao, String distribuidora) {
-		super(titulo, autor, capitulos, sinopse, avaliacao);
+	public Manga(String titulo, String autor, int capitulos, String sinopse, String distribuidora) {
+		super(titulo, autor, capitulos, sinopse);
 		this.distribuidora = distribuidora;
 	}
 

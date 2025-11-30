@@ -1,8 +1,8 @@
 public class Manhwa extends Obra {
 	private String plataforma;
 
-	public Manhwa(String titulo, String autor, int capitulos, String sinopse, double avaliacao, String plataforma) {
-		super(titulo, autor, capitulos, sinopse, avaliacao);
+	public Manhwa(String titulo, String autor, int capitulos, String sinopse, String plataforma) {
+		super(titulo, autor, capitulos, sinopse);
 		this.plataforma = plataforma;
 	}
 

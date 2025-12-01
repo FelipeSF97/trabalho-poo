@@ -8,16 +8,14 @@ public abstract class Obra {
 	private String autor;
 	private int numCapitulos;
 	private String sinopse;
-	private double avaliacao;
 	private List<Genero> generos = new ArrayList<>();
 	private Map<Integer, Capitulo> capitulos = new HashMap<>();
 
-	public Obra(String titulo, String autor, int capitulos, String sinopse, double avaliacao) {
+	public Obra(String titulo, String autor, int capitulos, String sinopse) {
 		this.titulo = titulo;
 		this.autor = autor;
 		this.numCapitulos = capitulos;
 		this.sinopse = sinopse;
-		this.avaliacao = avaliacao;
 	}
 
 	public String getTitulo() {
@@ -36,10 +34,6 @@ public abstract class Obra {
 		return sinopse;
 	}
 
-	public double getAvaliacao() {
-		return avaliacao;
-	}
-
 	public List<Genero> getGeneros() {
 		return generos;
 	}
@@ -47,10 +41,6 @@ public abstract class Obra {
 	public void adicionarGenero(Genero genero) {
 		if (genero != null)
 			generos.add(genero);
-	}
-
-	public void avaliarObra(double nota) {
-		this.avaliacao = nota;
 	}
 
 	public abstract String getTipo();

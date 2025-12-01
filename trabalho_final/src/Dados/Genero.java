@@ -1,7 +1,7 @@
 package Dados;
 public class Genero {
 
-	private String nomeGenero;
+	private final String nomeGenero;
 
 	public Genero(String nome) {
 		this.nomeGenero = nome;
@@ -10,6 +10,7 @@ public class Genero {
 	public String getNomeGenero() {
 		return nomeGenero;
 	}
+	
 
 	@Override
 	public String toString() {

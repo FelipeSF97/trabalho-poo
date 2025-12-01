@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import Dados.Usuario;
 import Dados.Biblioteca;
+import Dados.Genero;
 import Dados.Obra;
 import Dados.Manga;
 import Dados.Manhwa;
@@ -47,34 +48,51 @@ public class Aplicacao extends JFrame {
 
     private void inicializarDados() {
 
+        Genero acao = new Genero("Ação");
+        Genero terror = new Genero("Terror");
+        Genero aventura = new Genero("Aventura");
+        Genero fantasia = new Genero("Fantasia");
         // --------- MANGÁS ---------
         Manga berserk = new Manga("Berserk", "Kentaro Miura", 1989, 41);
-        berserk.criarCapitulo("The Black Swordsman", 48);
-        berserk.criarCapitulo("Brand", 42);
+        berserk.criarCapitulo("The Black Swordsman",  48);
+        berserk.criarCapitulo("Brand",  42);
+        berserk.adicionarGenero(acao);
+        berserk.adicionarGenero(terror);
+        berserk.adicionarGenero(fantasia);
         biblioteca.adicionarObra(berserk);
 
         Manga op = new Manga("One Piece", "Eiichiro Oda", 1997, 107);
-        op.criarCapitulo("Romance Dawn", 53);
-        op.criarCapitulo("The Pirate Hunter", 41);
+        op.criarCapitulo("Romance Dawn",  53);
+        op.criarCapitulo("The Pirate Hunter",  41);
+        op.adicionarGenero(acao);
+        op.adicionarGenero(aventura);
         biblioteca.adicionarObra(op);
 
         Manga fma = new Manga("Fullmetal Alchemist", "Hiromu Arakawa", 2001, 27);
-        fma.criarCapitulo("The Two Alchemists", 39);
+        fma.criarCapitulo("The Two Alchemists",  39);
+        fma.adicionarGenero(acao);
+        fma.adicionarGenero(aventura);
         biblioteca.adicionarObra(fma);
 
         // --------- MANHWAS ---------
         Manhwa sl = new Manhwa("Solo Leveling", "Chugong", 2016, 179);
-        sl.criarCapitulo("I'm Weak", 38);
-        sl.criarCapitulo("Grind", 40);
+        sl.criarCapitulo("I'm Weak",  38);
+        sl.criarCapitulo("Grind",  40);
+        sl.adicionarGenero(acao);
         biblioteca.adicionarObra(sl);
 
         Manhwa tog = new Manhwa("Tower of God", "SIU", 2010, 600);
-        tog.criarCapitulo("The 25th Night", 55);
+        tog.criarCapitulo("The 25th Night",  55);
+        tog.adicionarGenero(acao);
+        tog.adicionarGenero(aventura);
         biblioteca.adicionarObra(tog);
 
         Manhwa tbat = new Manhwa("The Beginning After the End", "TurtleMe", 2018, 180);
-        tbat.criarCapitulo("Early Life", 41);
+        tbat.criarCapitulo("Early Life",  41);
+        tbat.adicionarGenero(acao);
+        tbat.adicionarGenero(aventura);
         biblioteca.adicionarObra(tbat);
+
     }
 
     private void criarMenuSuperior() {
@@ -120,7 +138,10 @@ public class Aplicacao extends JFrame {
                 acervo.atualiza();
                 this.setContentPane(acervo);
             }
-            case 3 -> this.setContentPane(unico);
+            case 3 -> {
+                unico.atualizarLista();
+                this.setContentPane(unico);
+            }
             case 4 -> {
                 estatisticas.atualizar();
                 this.setContentPane(estatisticas);
@@ -141,4 +162,8 @@ public class Aplicacao extends JFrame {
         unico.atualizarLista();
         mudaPainel(3);
     }
+
+    public Usuario getUsuario() {
+    return usuario;
+}
 }

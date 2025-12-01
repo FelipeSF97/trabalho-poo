@@ -1,18 +1,25 @@
 package Dados;
+
 public class Manga extends Obra {
-	private String distribuidora;
 
-	public Manga(String titulo, String autor, String sinopse, String distribuidora) {
-		super(titulo, autor, sinopse);
-		this.distribuidora = distribuidora;
-	}
+    private int volumes;
 
-	public String getDistribuidora() {
-		return distribuidora;
-	}
+    public Manga(String titulo, String autor, int ano, int volumes) {
+        super(titulo, autor, ano);
+        this.volumes = volumes;
+    }
 
-	@Override
-	public String getTipo() {
-		return "Manga";
-	}
+    public int getVolumes() {
+        return volumes;
+    }
+
+    @Override
+    public int getNumeroUnidades() {
+        return volumes;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Manga";
+    }
 }

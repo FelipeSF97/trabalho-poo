@@ -1,61 +1,58 @@
 package Dados;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 public class Usuario {
-	private String nome;
-	private String cpf;
 
-	private List<Obra> obras = new ArrayList<>();
-	private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private String nome;
+    private String cpf;
 
-	public Usuario(String nome, String cpf) {
-		this.nome = nome;
-		this.cpf = cpf;
-	}
+    private Map<Obra, List<Avaliacao>> avaliacoes = new HashMap<>();
 
-	public String getNome() {
-    return nome;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-	public List<Obra> getObras() {
-		return obras;
-	}
-
-	public void avaliarObra(Obra obra, int nota, String comentario) {
-
-    if (obra == null) {
-        System.out.println("Obra inválida.");
-        return;
+    public Usuario(String nome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
     }
 
-    if (nota < 1 || nota > 10) {
-        System.out.println("A nota deve ser entre 1 e 10.");
-        return;
+    public String getNome() {
+        return nome;
     }
 
-    // Verifica se já existe avaliação dessa obra
-    for (Avaliacao a : avaliacoes) {
-        if (a.getObra().equals(obra)) {
-            // Atualiza a avaliação existente
-            avaliacoes.remove(a);
-            break;
+    public String getCpf() {
+        return cpf;
+    }
+
+    public Map<Obra, List<Avaliacao>> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public void avaliarObra(Obra obra, int nota, String comentario) {
+        Avaliacao nova = new Avaliacao(nota, comentario);
+
+        // salva no mapa do usuário
+        avaliacoes.computeIfAbsent(obra, o -> new ArrayList<>()).add(nova);
+
+        // salva na própria obra também
+        obra.adicionarAvaliacao(nova);
+
+    }
+
+    public double mediaNotasUsuario() {
+        double soma = 0;
+        int total = 0;
+
+        for (List<Avaliacao> lista : avaliacoes.values()) {
+            for (Avaliacao a : lista) {
+                soma += a.getNota();
+                total++;
+            }
         }
+
+        return (total == 0) ? 0 : soma / total;
     }
 
-    Avaliacao novaAvaliacao = new Avaliacao(obra, nota, comentario);
-    avaliacoes.add(novaAvaliacao);
-
-    System.out.println("Avaliação registrada com sucesso!");
-}
-
-
-	public void favoritarObra(Obra obra)
-    {
-		if (obra != null) obras.add(obra);
+    @Override
+    public String toString() {
+        return nome + " (" + cpf + ")";
     }
 }
- 

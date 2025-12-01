@@ -1,18 +1,13 @@
 package Dados;
+
 public class Avaliacao {
 
-    private Obra obra;
-    private int nota;
-    private String comentario;
+    private int nota;            // 1 a 10
+    private String comentario;   // opcional
 
-    public Avaliacao(Obra obra, int nota, String comentario) {
-        this.obra = obra;
+    public Avaliacao(int nota, String comentario) {
         this.nota = nota;
         this.comentario = comentario;
-    }
-
-    public Obra getObra() {
-        return obra;
     }
 
     public int getNota() {
@@ -22,5 +17,9 @@ public class Avaliacao {
     public String getComentario() {
         return comentario;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Nota: " + nota + " - " + comentario;
+    }
+}

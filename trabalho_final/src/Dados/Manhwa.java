@@ -1,18 +1,25 @@
 package Dados;
+
 public class Manhwa extends Obra {
-	private String plataforma;
 
-	public Manhwa(String titulo, String autor, String sinopse, String plataforma) {
-		super(titulo, autor, sinopse);
-		this.plataforma = plataforma;
-	}
+    private int capitulos;
 
-	public String getPlataforma() {
-		return plataforma;
-	}
+    public Manhwa(String titulo, String autor, int ano, int capitulos) {
+        super(titulo, autor, ano);
+        this.capitulos = capitulos;
+    }
 
-	@Override
-	public String getTipo() {
-		return "Manhwa";
-	}
+    public int getCapitulos() {
+        return capitulos;
+    }
+
+    @Override
+    public int getNumeroUnidades() {
+        return capitulos;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Manhwa";
+    }
 }

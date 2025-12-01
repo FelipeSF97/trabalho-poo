@@ -5,52 +5,42 @@ import Dados.Manga;
 import Dados.Manhwa;
 import Dados.Obra;
 import Dados.Usuario;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
-// ...existing code...
 public class Acervo extends JPanel {
-    //Pegamos nossa aplicação, usuario e biblioteca
     private Aplicacao app;
     private Usuario usuario;
     private Biblioteca biblioteca;
 
-    //Botões, listas e o scroll do mouse
     private JButton voltar;
     private JButton fechar;
     private JButton ver;
     private JButton adicionar;
     private JButton remover;
-    private DefaultListModel<String> lista;
+    private DefaultListModel<String> listaModel;
     private JList<String> listaObras;
     private JScrollPane scroll;
 
-    //Construtor
     public Acervo(Aplicacao app, Usuario usuario, Biblioteca biblioteca) {
-        super();
+        super(new BorderLayout(8, 8));
         this.app = app;
         this.usuario = usuario;
         this.biblioteca = biblioteca;
 
-        //Criação dos botões
-        voltar = new JButton("Volta");
+        voltar = new JButton("Voltar");
         fechar = new JButton("Fechar");
         ver = new JButton("Ver");
         adicionar = new JButton("Adicionar");
         remover = new JButton("Remover");
 
-        //Criação das listas que serão usadas
-        //Lista para add, remove e ver
-        //ListaObras para decoração
-        lista = new DefaultListModel<>();
-        listaObras = new JList<>(lista);
+        listaModel = new DefaultListModel<>();
+        listaObras = new JList<>(listaModel);
         listaObras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll = new JScrollPane(listaObras);
 
-        //Layout
-        setLayout(new BorderLayout(8,8));
         JPanel topo = new JPanel(new GridLayout(1, 5, 5, 5));
         topo.add(voltar);
         topo.add(ver);
@@ -61,164 +51,120 @@ public class Acervo extends JPanel {
         add(topo, BorderLayout.NORTH);
         add(scroll, BorderLayout.CENTER);
 
-        //Eventos para cada botão
-        voltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                app.mudaPainel(1);
+        voltar.addActionListener(e -> app.mudaPainel(1));
+        fechar.addActionListener(e -> System.exit(0));
+
+        ver.addActionListener(e -> {
+            int idx = listaObras.getSelectedIndex();
+            if (idx < 0) {
+                JOptionPane.showMessageDialog(this, "Selecione uma obra para ver.", "Atenção",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            Obra obra = biblioteca.getObras().get(idx);
+            app.abrirObraUnica(obra);
         });
 
-        fechar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-
-        ver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int idx = listaObras.getSelectedIndex();
-                if (idx < 0) {
-                    JOptionPane.showMessageDialog(Acervo.this, "Selecione uma obra para ver.", "Atenção", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                Obra obra = biblioteca.getObras().get(idx);
-                app.abrirObraUnica(obra); 
-            }
-        });
-
-        adicionar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Adicionar();
-            }
-        });
-
-        remover.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                remove();
-            }
-        });
+        adicionar.addActionListener(e -> adicionarObra());
+        remover.addActionListener(e -> removerObra());
 
         atualiza();
     }
 
-    //Atualiza a biblioteca para caso tenha removido ou adicionado uma obra
     public void atualiza() {
-        lista.clear();
+        listaModel.clear();
         if (biblioteca != null) {
             List<Obra> obras = biblioteca.getObras();
             for (Obra o : obras) {
-                lista.addElement(o.getTitulo());
+                listaModel.addElement(o.getTitulo() + "  [" + o.getTipo() + "]");
             }
         }
     }
 
-    //Mostre os detalhes de uma obra
-    private void Detalhes() {
-        int index = listaObras.getSelectedIndex();
-        if (index < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione uma obra na lista.", "Atenção", JOptionPane.WARNING_MESSAGE);
+    private void adicionarObra() {
+        String[] options = new String[] { "Manga", "Manhwa" };
+
+        String tipo = (String) JOptionPane.showInputDialog(
+                this,
+                "Escolha o tipo de obra:",
+                "Tipo de Obra",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        if (tipo == null)
             return;
-        }
 
-        Obra obra = biblioteca.getObras().get(index);
-        StringBuilder sb = new StringBuilder();
-
-        
-        try {
-            sb.append("Título: ").append(obra.getTitulo()).append("\n");
-        } catch (Exception ignored) {}
-
-        // Se for Manga, mostra automaticamente seus atributos
-        if (obra instanceof Manga) {
-            Manga m = (Manga) obra;
-            
-            try {
-                String autor = m.getAutor();
-                if (autor != null && !autor.isEmpty()) 
-                    sb.append("Autor: ").append(autor).append("\n");
-            } catch (Exception ignored) {}
-            
-            try {
-                String sinopse = m.getSinopse();
-                if (sinopse != null && !sinopse.isEmpty()) 
-                    sb.append("Sinopse: ").append(sinopse).append("\n");
-            } catch (Exception ignored) {}
-            
-            try {
-                String distribuidora = m.getDistribuidora();
-                if (distribuidora != null && !distribuidora.isEmpty()) 
-                    sb.append("Editora: ").append(distribuidora).append("\n");
-            } catch (Exception ignored) {}
-        } else {
-            
-            try {
-                Manhwa p = (Manhwa) obra;
-                String plataforma  = p.getPlataforma();
-                if (plataforma != null && !plataforma.isEmpty()) 
-                    sb.append("Editora: ").append(plataforma).append("\n");
-            } catch (Exception ignored) {}
-            
-            try {
-                String desc = obra.toString();
-                if (desc != null && !desc.isEmpty()) 
-                    sb.append(desc).append("\n");
-            } catch (Exception ignored) {}
-        }
-
-        String detalhes = sb.length() > 0 ? sb.toString() : "Sem detalhes disponíveis.";
-        JOptionPane.showMessageDialog(this, detalhes, "Detalhes da Obra", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    //Painel para adicionar um novo manga
-    //Problema: Não conseguir adicionar Manhwa
-    private void Adicionar() {
         JTextField tituloF = new JTextField();
         JTextField autorF = new JTextField();
-        JTextField sinopseF = new JTextField();
-        JTextField editoraF = new JTextField();
+        JTextField anoF = new JTextField();
+        JTextField unidadesF = new JTextField();
 
-        JPanel painel = new JPanel(new GridLayout(0,1));
+        JPanel painel = new JPanel(new GridLayout(0, 1));
         painel.add(new JLabel("Título:"));
         painel.add(tituloF);
         painel.add(new JLabel("Autor:"));
         painel.add(autorF);
-        painel.add(new JLabel("Sinopse:"));
-        painel.add(sinopseF);
-        painel.add(new JLabel("Editora:"));
-        painel.add(editoraF);
+        painel.add(new JLabel("Ano:"));
+        painel.add(anoF);
+        painel.add(new JLabel(tipo.equals("Manga") ? "Volumes:" : "Capítulos:"));
+        painel.add(unidadesF);
 
-        int result = JOptionPane.showConfirmDialog(this, painel, "Adicionar Manga", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            String titulo = tituloF.getText();
-            String autor = autorF.getText();
-            String sinopse = sinopseF.getText();
-            String editora = editoraF.getText();
+        int result = JOptionPane.showConfirmDialog(this, painel,
+                "Adicionar " + tipo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-            if (titulo.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Título é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        if (result != JOptionPane.OK_OPTION)
+            return;
 
-            // cria um Manga e adiciona na biblioteca
-            Manga m = new Manga(titulo, autor, sinopse, editora);
-            biblioteca.adicionarObra(m);
-            atualiza();
+        String titulo = tituloF.getText().trim();
+        String autor = autorF.getText().trim();
+        String anoS = anoF.getText().trim();
+        String unidadesS = unidadesF.getText().trim();
+
+        if (titulo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Título é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        int ano = 0, unidades = 0;
+        try {
+            ano = Integer.parseInt(anoS);
+        } catch (Exception ignored) {
+        }
+
+        try {
+            unidades = Integer.parseInt(unidadesS);
+            if (unidades < 0)
+                unidades = 0;
+        } catch (Exception ignored) {
+        }
+
+        if (tipo.equals("Manga")) {
+            Manga m = new Manga(titulo, autor, ano, unidades);
+            biblioteca.adicionarObra(m);
+        } else {
+            Manhwa mw = new Manhwa(titulo, autor, ano, unidades);
+            biblioteca.adicionarObra(mw);
+        }
+
+        atualiza();
     }
 
-    private void remove() {
+    private void removerObra() {
         int idx = listaObras.getSelectedIndex();
         if (idx < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione uma obra para remover.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecione uma obra para remover.", "Atenção",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
         Obra obra = biblioteca.getObras().get(idx);
-        int confirm = JOptionPane.showConfirmDialog(this, "Remover \"" + obra.getTitulo() + "\"?", "Confirmar remoção", JOptionPane.YES_NO_OPTION);
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Remover \"" + obra.getTitulo() + "\"?",
+                "Confirmar remoção",
+                JOptionPane.YES_NO_OPTION);
+
         if (confirm == JOptionPane.YES_OPTION) {
             biblioteca.removerObra(obra);
             atualiza();

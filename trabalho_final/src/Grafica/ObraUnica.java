@@ -2,27 +2,24 @@ package Grafica;
 
 import Dados.Obra;
 import Dados.Capitulo;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 public class ObraUnica extends JPanel {
-    
+
     private final Aplicacao app;
     private Obra obra;
-    //Utilizamos DefaultListModel (Explicar)
     private final DefaultListModel<String> modelo;
     private final JList<String> lista;
-    private final List<Integer> chaves; 
+    private final List<Integer> chaves;
 
     private final JLabel Titulo;
     private final JLabel Autor;
 
-    //Construtor
     public ObraUnica(Aplicacao app) {
         super(new BorderLayout(8,8));
         this.app = app;
@@ -33,22 +30,18 @@ public class ObraUnica extends JPanel {
         this.Titulo = new JLabel("");
         this.Autor = new JLabel("");
 
-        //Inicializar
         iniciar();
     }
 
     private void iniciar() {
-        //Fazer com que só possa selecionar um por vez
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scroll = new JScrollPane(lista);
 
-        //Adição dos botões
         JButton adicionar = new JButton("Adicionar");
         JButton remover = new JButton("Remover");
         JButton voltar = new JButton("Voltar");
         JButton ler = new JButton("Ler");
 
-        //Decoração
         JPanel header = new JPanel(new BorderLayout(6,6));
         JPanel labels = new JPanel(new GridLayout(2,1));
         Titulo.setFont(Titulo.getFont().deriveFont(Font.BOLD, 14f));
@@ -66,24 +59,23 @@ public class ObraUnica extends JPanel {
         add(scroll, BorderLayout.CENTER);
         add(botoes, BorderLayout.SOUTH);
 
-        //Adicionar ActionListener para cada botão (eventos)
         ler.addActionListener(e -> ler());
         adicionar.addActionListener(e -> Adicionar());
         remover.addActionListener(e -> Remover());
         voltar.addActionListener(e -> app.mudaPainel(2));
     }
 
-    // Muda a obra atual
     public void setObra(Obra obra) {
         this.obra = obra;
         if (obra != null) {
-            //Atualiza as informações 
             Titulo.setText("Título: " + obra.getTitulo());
             Autor.setText("Autor: " + obra.getAutor());
-        } 
+        } else {
+            Titulo.setText("");
+            Autor.setText("");
+        }
     }
 
-    // Atualiza a lista para a Obra que estiver vendo
     public void atualizarLista() {
         modelo.clear();
         chaves.clear();
@@ -97,15 +89,12 @@ public class ObraUnica extends JPanel {
         }
     }
 
-    //Adicionar nova obra
     private void Adicionar() {
         if (obra == null) {
-            //Utilizamos showMessageDialog para avisos 
             JOptionPane.showMessageDialog(this, "Nenhuma obra selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        //Cria uma pequena janela para adicionar titulo e numero de paginas do capitulo
         JTextField tituloF = new JTextField();
         JTextField paginasF = new JTextField();
         JPanel p = new JPanel(new GridLayout(0,1));
@@ -117,12 +106,13 @@ public class ObraUnica extends JPanel {
         int res = JOptionPane.showConfirmDialog(this, p, "Novo Capítulo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (res != JOptionPane.OK_OPTION) return;
 
-        String titulo = tituloF.getText();
-        String numPag = paginasF.getText();
+        String titulo = tituloF.getText().trim();
+        String numPag = paginasF.getText().trim();
         if (titulo.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Título obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         int paginas;
         try {
             paginas = Integer.parseInt(numPag);
@@ -145,12 +135,12 @@ public class ObraUnica extends JPanel {
             JOptionPane.showMessageDialog(this, "Nenhuma obra selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int numCapitulos = lista.getSelectedIndex();
-        if (numCapitulos < 0) {
+        int idx = lista.getSelectedIndex();
+        if (idx < 0) {
             JOptionPane.showMessageDialog(this, "Selecione um capítulo para remover.", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int numero = chaves.get(numCapitulos);
+        int numero = chaves.get(idx);
         Capitulo cap = obra.getCapitulo(numero);
         int ctz = JOptionPane.showConfirmDialog(this, "Remover capítulo \"" + (cap != null ? cap.getTitulo() : numero) + "\"?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (ctz != JOptionPane.YES_OPTION) return;

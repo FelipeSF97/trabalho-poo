@@ -1,119 +1,73 @@
 package Dados;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Biblioteca {
 
-	private List<Usuario> usuarios = new ArrayList<>();
-	private Map<String, Usuario> mapaUsuariosCpfs = new HashMap<>();
-	private List<Obra> obras = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
+    private Map<String, Usuario> mapaUsuariosCpfs = new HashMap<>();
 
-	public Biblioteca(){}
+    private List<Obra> obras = new ArrayList<>();
 
-	public double mediaAvaliacao() {
-		return 0;
-		// TODO: implementar
-	}
+    public Biblioteca() {}
 
-	public int somaCapitulo() {
-		return 0;
-		// TODO: implementar
-	}
+    // ---------------- GETTERS ----------------
 
-	public boolean usuarioCadastrado(String cpf)
-    {
-       return mapaUsuariosCpfs.containsKey(cpf);
-    }
-
-	public void cadastrarCliente(){
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Digite o CPF ou 'S' para sair: ");
-		String inputCPF = scan.nextLine();
-
-		if (inputCPF.equalsIgnoreCase("S"))
-            return;
-
-		 if (this.usuarioCadastrado(inputCPF))
-        {
-            System.out.println("Usuário com esse CPF já está cadastrado.");
-            return;
-        }
-		System.out.println("Digite o Nome ou 'S' para sair: ");
-		String inputNome = scan.nextLine();
-
-        if (inputNome.equalsIgnoreCase("S"))
-            return;
-
-         Usuario novoUsuario = new Usuario(inputNome, inputCPF);
-
-         usuarios.add(novoUsuario);
-
-		 mapaUsuariosCpfs.put(inputCPF, novoUsuario);
-		 
-		 System.out.println("Usuário cadastrado com sucesso!");
-    }
-
-	public void adicionarObra(Obra obra) {
-        if (obra != null)
-            obras.add(obra);
-    }
-
-    public void removerObra(Obra obra) {
-        if (obra != null)
-            obras.remove(obra);
-    }
-
-	public List<Obra> getObras() {
+    public List<Obra> getObras() {
         return obras;
     }
 
-	public void avaliarObraUsuario(Usuario usuario) {
-    if (usuario == null) {
-        System.out.println("Usuário inválido.");
-        return;
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    if (obras.isEmpty()) {
-        System.out.println("Nenhuma obra cadastrada.");
-        return;
+    // ---------------- OBRAS ----------------
+
+    public void adicionarObra(Obra obra) {
+        if (obra != null) obras.add(obra);
     }
 
-    Scanner scan = new Scanner(System.in);
-
-    System.out.println("Selecione a obra para avaliar:");
-    for (int i = 0; i < obras.size(); i++) {
-        System.out.println((i + 1) + " - " + obras.get(i).getTitulo());
+    public void removerObra(Obra obra) {
+        obras.remove(obra);
     }
 
-    System.out.print("Digite o número da obra: ");
-    int opcao = scan.nextInt();
-    scan.nextLine();
+    // ---------------- MÉTRICAS ----------------
 
-    if (opcao < 1 || opcao > obras.size()) {
-        System.out.println("Opção inválida.");
-        return;
+    // Soma capítulos ou volumes
+    public int somaCapitulo() {
+        int soma = 0;
+        for (Obra o : obras) soma += o.getNumeroUnidades();
+        return soma;
     }
 
-    Obra obraSelecionada = obras.get(opcao - 1);
+    // Média geral das avaliações de TODOS os usuários
+    public double mediaAvaliacao() {
 
-    System.out.print("Digite a nota (1 a 10): ");
-    int nota = scan.nextInt();
-    scan.nextLine();
+        double soma = 0;
+        int qtd = 0;
 
-    if (nota < 1 || nota > 10) {
-        System.out.println("Nota inválida.");
-        return;
+        for (Usuario u : usuarios) {
+            for (List<Avaliacao> lista : u.getAvaliacoes().values()) {
+                for (Avaliacao a : lista) {
+                    soma += a.getNota();
+                    qtd++;
+                }
+            }
+        }
+
+        return (qtd == 0) ? 0 : soma / qtd;
     }
 
-    System.out.print("Digite um comentário: ");
-    String comentario = scan.nextLine();
+    // ---------------- USUÁRIOS ----------------
 
-    usuario.avaliarObra(obraSelecionada, nota, comentario);
+    public boolean usuarioCadastrado(String cpf) {
+        return mapaUsuariosCpfs.containsKey(cpf);
+    }
 
-    System.out.println("Avaliação registrada com sucesso!");
-}
-
+    public void adicionarUsuario(Usuario u) {
+        if (u != null && !usuarioCadastrado(u.getCpf())) {
+            usuarios.add(u);
+            mapaUsuariosCpfs.put(u.getCpf(), u);
+        }
+    }
 }

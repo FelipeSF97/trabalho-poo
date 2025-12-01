@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class Obra {
 
@@ -14,6 +15,7 @@ public abstract class Obra {
     private int ano;
     private List<Genero> generos = new ArrayList<>();
     private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private Genero genero;
 
     // Mapa de capítulos: chave -> número do capítulo
     private Map<Integer, Capitulo> capitulos = new HashMap<>();
@@ -80,20 +82,24 @@ public abstract class Obra {
      * atribui o próximo número disponível e o adiciona ao mapa.
      * Retorna o capítulo criado ou null em caso de dados inválidos.
      */
-    public Capitulo criarCapitulo(String tituloCap, int numPaginas) {
-        if (tituloCap == null || tituloCap.trim().isEmpty()) {
-            System.err.println("Título do capítulo inválido.");
-            return null;
+    public Capitulo criarCapitulo(String titulo, int numPaginas) {
+
+        if (titulo == null || titulo.isBlank() || numPaginas <= 0) {
+            return null; // validação básica
         }
-        if (numPaginas <= 0) {
-            System.err.println("Número de páginas deve ser maior que zero.");
-            return null;
-        }
-        Capitulo c = new Capitulo(tituloCap, numPaginas, this);
+
+        // número automático do capítulo
         int numero = proximoNumeroCapitulo();
-        capitulos.put(numero, c);
-        return c;
+
+        // cria o capítulo associado a esta obra
+        Capitulo cap = new Capitulo(numero, titulo, numPaginas, this);
+
+        // adiciona ao mapa
+        capitulos.put(numero, cap);
+
+        return cap;
     }
+
 
     /**
      * Adiciona um capítulo já existente (possivelmente vindo de outra fonte).
@@ -102,17 +108,20 @@ public abstract class Obra {
      * Retorna o capítulo final presente na obra.
      */
     public Capitulo adicionarCapitulo(Capitulo cap) {
-        if (cap == null)
-            return null;
+        if (cap == null) return null;
+
+        // Capítulo de outra obra → criar um novo capítulo equivalente
         if (cap.getObra() != this) {
-            // cria novo capítulo local com mesmo título/páginas
-            return criarCapitulo(cap.getTitulo(), cap.getNumPaginas());
-        } else {
-            int numero = proximoNumeroCapitulo();
-            capitulos.put(numero, cap);
-            return cap;
+            Capitulo novo = criarCapitulo(cap.getTitulo(), cap.getNumPaginas());
+            capitulos.put(novo.getNumeroCap(), novo); // <--- CORREÇÃO ESSENCIAL
+            return novo;
         }
+
+        // Capítulo já pertence a esta obra → adicionar normalmente
+            capitulos.put(cap.getNumeroCap(), cap);
+            return cap;
     }
+
 
     /**
      * Retorna o capítulo associado ao número, ou null se não existir.
@@ -133,18 +142,6 @@ public abstract class Obra {
         return capitulos.remove(numero);
     }
 
-    /**
-     * Retorna uma lista ordenada de capítulos (ordenada pelo número).
-     */
-    public List<Capitulo> listarCapitulos() {
-        List<Integer> keys = new ArrayList<>(capitulos.keySet());
-        Collections.sort(keys);
-        List<Capitulo> lista = new ArrayList<>();
-        for (Integer k : keys)
-            lista.add(capitulos.get(k));
-        return lista;
-    }
-
     public void adicionarGenero(Genero g) {
         if (g != null)
             generos.add(g);
@@ -160,7 +157,7 @@ public abstract class Obra {
     }
 
     public List<Avaliacao> getAvaliacoes() {
-        return avaliacoes;
+        return Collections.unmodifiableList(avaliacoes);
     }
 
     public double getMediaAvaliacoes() {
@@ -171,5 +168,17 @@ public abstract class Obra {
             soma += a.getNota();
         return soma / avaliacoes.size();
     }
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+        }
 
+    public Genero getGenero() {
+        return genero;
+    }
+    public String getGenerosComoString() {
+        if (generos.isEmpty()) return "Sem gênero";
+        return generos.stream()
+                    .map(Genero::getNomeGenero)
+                    .collect(Collectors.joining(", "));
+    }
 }

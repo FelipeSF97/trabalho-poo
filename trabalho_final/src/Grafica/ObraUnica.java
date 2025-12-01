@@ -1,6 +1,7 @@
 package Grafica;
 
 import Dados.Obra;
+import Dados.Usuario;
 import Dados.Capitulo;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ public class ObraUnica extends JPanel {
 
     private final JLabel Titulo;
     private final JLabel Autor;
+
+    private JButton favoritar;
 
     public ObraUnica(Aplicacao app) {
         super(new BorderLayout(8,8));
@@ -41,6 +44,7 @@ public class ObraUnica extends JPanel {
         JButton remover = new JButton("Remover");
         JButton voltar = new JButton("Voltar");
         JButton ler = new JButton("Ler");
+        favoritar = new JButton("Favoritar");
 
         JPanel header = new JPanel(new BorderLayout(6,6));
         JPanel labels = new JPanel(new GridLayout(2,1));
@@ -54,6 +58,7 @@ public class ObraUnica extends JPanel {
         botoes.add(adicionar);
         botoes.add(remover);
         botoes.add(voltar);
+        botoes.add(favoritar);
 
         add(header, BorderLayout.NORTH);
         add(scroll, BorderLayout.CENTER);
@@ -63,6 +68,7 @@ public class ObraUnica extends JPanel {
         adicionar.addActionListener(e -> Adicionar());
         remover.addActionListener(e -> Remover());
         voltar.addActionListener(e -> app.mudaPainel(2));
+        favoritar.addActionListener(e -> toggleFavorito());
     }
 
     public void setObra(Obra obra) {
@@ -73,6 +79,11 @@ public class ObraUnica extends JPanel {
         } else {
             Titulo.setText("");
             Autor.setText("");
+        }
+        if (obra != null && app.getUsuario().isFavorito(obra)) {
+            favoritar.setText("Desfavoritar");
+        } else {
+            favoritar.setText("Favoritar");
         }
     }
 
@@ -156,4 +167,20 @@ public class ObraUnica extends JPanel {
     public void ler(){
         JOptionPane.showMessageDialog(this, "Você (não) está lendo o capitulo!", "Capitulo", JOptionPane.WARNING_MESSAGE);
     }
+
+    private void toggleFavorito() {
+    if (obra == null) return;
+
+    Usuario u = app.getUsuario(); // Crie um getter em Aplicacao
+    if (u.isFavorito(obra)) {
+        u.desfavoritar(obra);
+        JOptionPane.showMessageDialog(this, "Obra removida dos favoritos!");
+        favoritar.setText("Favoritar");
+    } else {
+        u.favoritar(obra);
+        JOptionPane.showMessageDialog(this, "Obra adicionada aos favoritos!");
+        favoritar.setText("Desfavoritar");
+    }
+}
+
 }

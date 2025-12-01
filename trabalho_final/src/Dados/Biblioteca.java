@@ -6,7 +6,7 @@ public class Biblioteca {
 
     private List<Usuario> usuarios = new ArrayList<>();
     private Map<String, Usuario> mapaUsuariosCpfs = new HashMap<>();
-
+    private List<Genero> generos = new ArrayList<>();
     private List<Obra> obras = new ArrayList<>();
 
     public Biblioteca() {}
@@ -61,8 +61,16 @@ public class Biblioteca {
     // ---------------- USUÁRIOS ----------------
 
     public boolean usuarioCadastrado(String cpf) {
-        return mapaUsuariosCpfs.containsKey(cpf);
+        if (cpf == null) return false;
+
+        for (Usuario u : usuarios) {
+            if (u.getCpf().equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
     }
+
 
     public void adicionarUsuario(Usuario u) {
         if (u != null && !usuarioCadastrado(u.getCpf())) {
@@ -70,4 +78,21 @@ public class Biblioteca {
             mapaUsuariosCpfs.put(u.getCpf(), u);
         }
     }
+
+    public void adicionarGenero(Genero g) {
+        if (g != null) generos.add(g);
+    }
+
+    public List<Genero> getGeneros() {
+        return Collections.unmodifiableList(generos);
+    }
+    
+    public Usuario buscarUsuarioPorCPF(String cpf) {
+    for (Usuario u : usuarios) {
+        if (u.getCpf().equals(cpf)) {
+            return u;
+        }
+    }
+    return null;
+}
 }

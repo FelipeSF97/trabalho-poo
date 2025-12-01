@@ -9,6 +9,7 @@ public class Manhwa extends Obra {
         this.capitulos = capitulos;
     }
 
+
     public int getCapitulos() {
         return capitulos;
     }

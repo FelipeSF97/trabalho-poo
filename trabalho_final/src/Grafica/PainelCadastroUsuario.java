@@ -53,6 +53,14 @@ public class PainelCadastroUsuario extends JPanel {
             return;
         }
 
+        if (!cpf.matches("\\d{11}")) {
+            JOptionPane.showMessageDialog(this,
+                    "CPF deve conter apenas números e ter 11 dígitos.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         if (biblioteca.usuarioCadastrado(cpf)) {
             JOptionPane.showMessageDialog(this, "CPF já cadastrado.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -64,5 +72,7 @@ public class PainelCadastroUsuario extends JPanel {
         JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         nomeField.setText("");
         cpfField.setText("");
+
+        app.mudaPainel(2);
     }
 }

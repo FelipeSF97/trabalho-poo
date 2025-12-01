@@ -5,7 +5,6 @@ import Dados.Obra;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class PainelBuscar extends JPanel {
@@ -65,7 +64,7 @@ public class PainelBuscar extends JPanel {
                 .collect(Collectors.toList());
 
         for (Obra o : resultados) {
-            model.addElement(o.getTitulo() + " [" + o.getTipo() + "]");
+            model.addElement(o.getTitulo() + " [" + o.getTipo() + "] - " + o.getGenerosComoString());
         }
 
         if (resultados.isEmpty()) {

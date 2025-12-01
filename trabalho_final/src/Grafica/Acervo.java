@@ -1,13 +1,18 @@
 package Grafica;
 
 import Dados.Biblioteca;
+import Dados.Genero;
 import Dados.Manga;
 import Dados.Manhwa;
 import Dados.Obra;
 import Dados.Usuario;
 
 import javax.swing.*;
+
+import java.awt.event.MouseEvent;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.util.List;
 
 public class Acervo extends JPanel {
@@ -40,6 +45,15 @@ public class Acervo extends JPanel {
         listaObras = new JList<>(listaModel);
         listaObras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scroll = new JScrollPane(listaObras);
+
+        listaObras.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { 
+                    ver.doClick();            
+                }
+            }
+        });
 
         JPanel topo = new JPanel(new GridLayout(1, 5, 5, 5));
         topo.add(voltar);
@@ -76,13 +90,18 @@ public class Acervo extends JPanel {
         if (biblioteca != null) {
             List<Obra> obras = biblioteca.getObras();
             for (Obra o : obras) {
-                listaModel.addElement(o.getTitulo() + "  [" + o.getTipo() + "]");
+                listaModel.addElement(o.getTitulo() + " [" + o.getTipo() + "] - " + o.getGenerosComoString());
+
             }
         }
     }
 
     private void adicionarObra() {
         String[] options = new String[] { "Manga", "Manhwa" };
+
+        JComboBox<Genero> generoCombo = new JComboBox<>(
+        biblioteca.getGeneros().toArray(new Genero[0]));
+        
 
         String tipo = (String) JOptionPane.showInputDialog(
                 this,
@@ -110,6 +129,9 @@ public class Acervo extends JPanel {
         painel.add(anoF);
         painel.add(new JLabel(tipo.equals("Manga") ? "Volumes:" : "Capítulos:"));
         painel.add(unidadesF);
+        painel.add(new JLabel("Gênero:"));
+        painel.add(generoCombo);
+
 
         int result = JOptionPane.showConfirmDialog(this, painel,
                 "Adicionar " + tipo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -143,10 +165,14 @@ public class Acervo extends JPanel {
         if (tipo.equals("Manga")) {
             Manga m = new Manga(titulo, autor, ano, unidades);
             biblioteca.adicionarObra(m);
+            Genero genero = (Genero) generoCombo.getSelectedItem();
+            m.setGenero(genero);
+
         } else {
             Manhwa mw = new Manhwa(titulo, autor, ano, unidades);
             biblioteca.adicionarObra(mw);
         }
+        
 
         atualiza();
     }

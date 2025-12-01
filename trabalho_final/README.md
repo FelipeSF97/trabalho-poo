@@ -1,18 +1,12 @@
-## Getting Started
+## LerMangas
+Aplicação em java utilizando a interface gráfica Java Swing que retorna uma lista de de mangás e manhwas com seus respectivos nomes, tipos, gêneros e capítulos. A aplicação também permite que o usuário adicione obras e capítulos a biblioteca do projeto.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Autoavaliação
 
-## Folder Structure
+Felipe Flores: 10/10
+Luca Callegari: 10/10
+Renan Bertoletti: 10/10
 
-The workspace contains two folders by default, where:
+## Justificativa
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Acreditamos que apesar de termos subestimado um pouco a dificuldade do projeto. Conseguimos superar os desafios e entregar uma aplicação que se adeque ao que foi pedido.

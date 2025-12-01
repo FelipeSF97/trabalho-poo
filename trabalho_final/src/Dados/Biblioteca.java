@@ -1,3 +1,4 @@
+package Dados;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +59,11 @@ public class Biblioteca {
 	public void adicionarObra(Obra obra) {
         if (obra != null)
             obras.add(obra);
+    }
+
+    public void removerObra(Obra obra) {
+        if (obra != null)
+            obras.remove(obra);
     }
 
 	public List<Obra> getObras() {

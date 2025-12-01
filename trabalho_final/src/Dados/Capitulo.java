@@ -1,3 +1,4 @@
+package Dados;
 public class Capitulo {
     private String titulo;
     private int numPaginas;

@@ -1,3 +1,4 @@
+package Dados;
 public class Genero {
 
 	private String nomeGenero;

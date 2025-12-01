@@ -1,3 +1,4 @@
+package Dados;
 public class Avaliacao {
 
     private Obra obra;

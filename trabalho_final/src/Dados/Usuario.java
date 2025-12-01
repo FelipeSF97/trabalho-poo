@@ -1,9 +1,11 @@
+package Dados;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
 	private String nome;
 	private String cpf;
+
 	private List<Obra> obras = new ArrayList<>();
 	private List<Avaliacao> avaliacoes = new ArrayList<>();
 

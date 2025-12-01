@@ -1,13 +1,17 @@
-public class Manga extends Obras {
-
+public class Manga extends Obra {
 	private String distribuidora;
 
-	public Manga(String distribuidora) {
-
+	public Manga(String titulo, String autor, int capitulos, String sinopse, String distribuidora) {
+		super(titulo, autor, capitulos, sinopse);
+		this.distribuidora = distribuidora;
 	}
 
 	public String getDistribuidora() {
-		return null;
+		return distribuidora;
 	}
 
+	@Override
+	public String getTipo() {
+		return "Manga";
+	}
 }
